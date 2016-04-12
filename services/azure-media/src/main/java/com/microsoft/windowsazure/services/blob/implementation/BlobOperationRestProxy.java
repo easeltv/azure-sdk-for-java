@@ -380,10 +380,13 @@ public abstract class BlobOperationRestProxy implements BlobContract {
             BlockList blockList, CommitBlobBlocksOptions options)
             throws ServiceException {
         String path = createPathFromContainer(container);
+
         WebResource webResource = getResource(options).path(path).path(blob)
                 .queryParam("comp", "blocklist");
 
         Builder builder = webResource.header("x-ms-version", API_VERSION);
+        builder.type("application/xml");
+
         builder = addOptionalHeader(builder, "x-ms-lease-id",
                 options.getLeaseId());
         builder = addOptionalHeader(builder, "x-ms-blob-cache-control",
@@ -399,6 +402,8 @@ public abstract class BlobOperationRestProxy implements BlobContract {
         builder = addOptionalMetadataHeader(builder, options.getMetadata());
         builder = addOptionalAccessConditionHeader(builder,
                 options.getAccessCondition());
+
+
 
         builder.put(blockList);
     }
